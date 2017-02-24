@@ -1,6 +1,7 @@
 package beg.hr.kotlindesarrolladorandroid.news.ui
 
 import android.os.Bundle
+import beg.hr.kotlindesarrolladorandroid.common.ui.UserActionEvent
 import beg.hr.kotlindesarrolladorandroid.common.ui.ViewState
 import beg.hr.kotlindesarrolladorandroid.news.api.NewsManager
 import rx.Observable
@@ -26,6 +27,8 @@ class NewsPresenterImpl constructor(val viewState: ViewState, val newsManager: N
                 .delay(1000, TimeUnit.MILLISECONDS)
                 .map { State(false, it) }
 
+        subscription.add(view?.userActions()?.subscribe { action -> handleAction(action) })
+
         subscription.add(Observable.merge(storedStateObservable, newStateObservable)
                 .distinctUntilChanged()
                 .observeOn(mainThread())
@@ -34,6 +37,15 @@ class NewsPresenterImpl constructor(val viewState: ViewState, val newsManager: N
                     state = state1
                     view?.render(state1)
                 })
+    }
+
+    private fun handleAction(action: UserActionEvent) {
+        when (action.type) {
+            ActionTypes.BUTTON_CLICKED -> {
+                view?.render(State(true, emptyList()))
+            }
+            else -> throw IllegalStateException("Don't know how to handle this type")
+        }
     }
 
     override fun onDestroy() {

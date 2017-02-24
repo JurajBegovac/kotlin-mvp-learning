@@ -2,7 +2,9 @@ package beg.hr.kotlindesarrolladorandroid.news.ui
 
 import android.os.Parcel
 import android.os.Parcelable
+import beg.hr.kotlindesarrolladorandroid.common.ui.UserActionEvent
 import beg.hr.kotlindesarrolladorandroid.common.ui.ViewPresenter
+import rx.Observable
 
 /**
  * Created by juraj on 23/02/2017.
@@ -31,6 +33,8 @@ class NewsKey() : Parcelable {
  */
 interface NewsView {
     fun render(state: State)
+
+    fun userActions(): Observable<UserActionEvent>
 }
 
 /**
@@ -38,6 +42,14 @@ interface NewsView {
  */
 abstract class NewsPresenter : ViewPresenter<NewsView>() {
 }
+
+class ActionTypes {
+    companion object {
+        val BASE: String = "view:news"
+        val BUTTON_CLICKED: String = BASE + "button:clicked"
+    }
+}
+
 
 // View Models
 data class State(val loading: Boolean, val news: List<NewsItem>) : Parcelable {
