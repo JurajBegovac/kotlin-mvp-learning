@@ -1,6 +1,9 @@
 package beg.hr.kotlindesarrolladorandroid
 
 import android.app.Application
+import beg.hr.kotlindesarrolladorandroid.di.dagger2.AppComponent
+import beg.hr.kotlindesarrolladorandroid.di.dagger2.AppModule
+import beg.hr.kotlindesarrolladorandroid.di.dagger2.DaggerAppComponent
 
 /**
  * Created by juraj on 23/02/2017.
@@ -8,7 +11,12 @@ import android.app.Application
 
 class MyApplication : Application() {
 
+    lateinit var component: AppComponent
+
     override fun onCreate() {
         super.onCreate()
+        component = DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .build()
     }
 }

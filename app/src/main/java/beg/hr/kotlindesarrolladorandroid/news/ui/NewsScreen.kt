@@ -7,16 +7,19 @@ import beg.hr.kotlindesarrolladorandroid.common.Presenter
 /**
  * Created by juraj on 23/02/2017.
  */
+fun defaultViewState(): NewsScreen.ViewState = NewsScreen.ViewState(true, emptyList())
+
 class NewsScreen() : Parcelable {
     interface View {
         fun render(state: ViewState)
     }
 
-    interface NewsPresenter : Presenter<View> {
+    interface NewsPresenter : Presenter {
     }
 
     // View Models
     data class ViewState(val loading: Boolean, val news: List<NewsItem>) : Parcelable {
+
         companion object {
             @JvmField val CREATOR: Parcelable.Creator<ViewState> = object : Parcelable.Creator<ViewState> {
                 override fun createFromParcel(source: Parcel): ViewState = ViewState(source)

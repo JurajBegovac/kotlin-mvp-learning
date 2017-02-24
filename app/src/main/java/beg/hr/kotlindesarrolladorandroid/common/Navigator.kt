@@ -3,9 +3,9 @@ package beg.hr.kotlindesarrolladorandroid.common
 /**
  * Created by juraj on 24/02/2017.
  */
+interface Navigator {
 
-interface Presenter {
-    fun onLoad()
+    fun goBack()
 
-    fun onDestroy()
+    fun goTo(key: Any)
 }
