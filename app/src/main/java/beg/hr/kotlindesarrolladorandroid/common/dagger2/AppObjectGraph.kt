@@ -1,6 +1,7 @@
-package beg.hr.kotlindesarrolladorandroid.di.dagger2
+package beg.hr.kotlindesarrolladorandroid.common.dagger2
 
 import android.app.Application
+import android.content.Context
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -23,4 +24,8 @@ class AppModule(val application: Application) {
     @Singleton
     fun application() = application
 
+    @Provides
+    @Singleton
+    @ApplicationContext
+    fun context(): Context = application.applicationContext
 }

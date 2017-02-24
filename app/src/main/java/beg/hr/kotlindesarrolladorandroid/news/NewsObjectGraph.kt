@@ -1,11 +1,16 @@
 package beg.hr.kotlindesarrolladorandroid.news
 
-import beg.hr.kotlindesarrolladorandroid.common.Navigator
-import beg.hr.kotlindesarrolladorandroid.di.dagger2.PerScreen
+import android.content.Context
+import android.view.View
+import beg.hr.kotlindesarrolladorandroid.R
+import beg.hr.kotlindesarrolladorandroid.common.dagger2.ActivityContext
+import beg.hr.kotlindesarrolladorandroid.common.dagger2.PerScreen
+import beg.hr.kotlindesarrolladorandroid.common.ui.ViewState
 import beg.hr.kotlindesarrolladorandroid.news.api.NewsManager
-import beg.hr.kotlindesarrolladorandroid.news.ui.NewsFragment
-import beg.hr.kotlindesarrolladorandroid.news.ui.NewsScreen
-import beg.hr.kotlindesarrolladorandroid.news.ui.Presenter
+import beg.hr.kotlindesarrolladorandroid.news.ui.NewsPresenter
+import beg.hr.kotlindesarrolladorandroid.news.ui.NewsPresenterImpl
+import beg.hr.kotlindesarrolladorandroid.news.ui.NewsView
+import beg.hr.kotlindesarrolladorandroid.news.ui.NewsViewImpl
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
@@ -16,7 +21,8 @@ import dagger.Subcomponent
 @PerScreen
 @Subcomponent(modules = arrayOf(NewsModule::class))
 interface NewsComponent {
-    fun inject(target: NewsFragment)
+    fun inject(target: NewsViewImpl)
+    fun view(): NewsView
 
     @Subcomponent.Builder
     interface Builder {
@@ -26,7 +32,7 @@ interface NewsComponent {
 }
 
 @Module
-class NewsModule(val view: NewsScreen.View) {
+class NewsModule(val viewState: ViewState) {
 
     @Provides
     @PerScreen
@@ -34,5 +40,9 @@ class NewsModule(val view: NewsScreen.View) {
 
     @Provides
     @PerScreen
-    fun presenter(newsManager: NewsManager, navigator: Navigator): NewsScreen.NewsPresenter = Presenter(view, newsManager, navigator)
+    fun presenter(newsManager: NewsManager): NewsPresenter = NewsPresenterImpl(viewState, newsManager)
+
+    @Provides
+    @PerScreen
+    fun view(@ActivityContext context: Context): NewsView = View.inflate(context, R.layout.view_news, null) as NewsView
 }

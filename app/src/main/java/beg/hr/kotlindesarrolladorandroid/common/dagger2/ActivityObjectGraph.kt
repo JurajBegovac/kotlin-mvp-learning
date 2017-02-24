@@ -1,8 +1,7 @@
-package beg.hr.kotlindesarrolladorandroid.di.dagger2
+package beg.hr.kotlindesarrolladorandroid.common.dagger2
 
 import android.app.Activity
 import android.content.Context
-import beg.hr.kotlindesarrolladorandroid.common.Navigator
 import beg.hr.kotlindesarrolladorandroid.news.NewsComponent
 import dagger.Module
 import dagger.Provides
@@ -15,7 +14,7 @@ import dagger.Subcomponent
 @PerActivity
 @Subcomponent(modules = arrayOf(ActivityModule::class))
 interface ActivityComponent {
-    fun context(): Context
+
     fun newsBuilder(): NewsComponent.Builder
 
     @Subcomponent.Builder
@@ -26,7 +25,7 @@ interface ActivityComponent {
 }
 
 @Module(subcomponents = arrayOf(NewsComponent::class))
-class ActivityModule(val activity: Activity, val navigator: Navigator) {
+class ActivityModule(val activity: Activity) {
 
     @Provides
     @PerActivity
@@ -34,9 +33,6 @@ class ActivityModule(val activity: Activity, val navigator: Navigator) {
 
     @Provides
     @PerActivity
+    @ActivityContext
     fun context(): Context = activity
-
-    @Provides
-    @PerActivity
-    fun dispatcher() = navigator
 }
