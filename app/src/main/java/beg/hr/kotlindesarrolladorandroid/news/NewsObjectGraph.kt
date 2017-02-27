@@ -7,6 +7,9 @@ import beg.hr.kotlindesarrolladorandroid.common.dagger2.ActivityContext
 import beg.hr.kotlindesarrolladorandroid.common.dagger2.PerScreen
 import beg.hr.kotlindesarrolladorandroid.common.ui.ViewState
 import beg.hr.kotlindesarrolladorandroid.news.api.NewsManager
+import beg.hr.kotlindesarrolladorandroid.news.api.NewsManagerImpl
+import beg.hr.kotlindesarrolladorandroid.news.sevice.NewsService
+import beg.hr.kotlindesarrolladorandroid.news.sevice.NewsServiceImpl
 import beg.hr.kotlindesarrolladorandroid.news.ui.NewsPresenter
 import beg.hr.kotlindesarrolladorandroid.news.ui.NewsPresenterImpl
 import beg.hr.kotlindesarrolladorandroid.news.ui.NewsView
@@ -36,11 +39,15 @@ class NewsModule(val viewState: ViewState) {
 
     @Provides
     @PerScreen
-    fun newsManager() = NewsManager()
+    fun newsManager(): NewsManager = NewsManagerImpl()
 
     @Provides
     @PerScreen
-    fun presenter(newsManager: NewsManager): NewsPresenter = NewsPresenterImpl(viewState, newsManager)
+    fun newsService(newsManager: NewsManager): NewsService = NewsServiceImpl(newsManager)
+
+    @Provides
+    @PerScreen
+    fun presenter(newsService: NewsService): NewsPresenter = NewsPresenterImpl(viewState, newsService)
 
     @Provides
     @PerScreen

@@ -28,4 +28,5 @@ class AppModule(val application: Application) {
     @Singleton
     @ApplicationContext
     fun context(): Context = application.applicationContext
+
 }

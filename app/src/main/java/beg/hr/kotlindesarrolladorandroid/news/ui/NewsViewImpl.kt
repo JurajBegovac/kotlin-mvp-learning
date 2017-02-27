@@ -20,11 +20,6 @@ class NewsViewImpl @JvmOverloads constructor(context: Context?, attrs: Attribute
 
     private lateinit var userActions: Observable<UserActionEvent>
 
-
-    private fun bindActions(): Observable<UserActionEvent> {
-        return button.clicks().map { UserActionEvent(ActionTypes.BASE, ActionTypes.BUTTON_CLICKED) }
-    }
-
     override fun render(state: State) {
         if (state.loading) {
             progressBar.visibility = View.VISIBLE
@@ -51,4 +46,9 @@ class NewsViewImpl @JvmOverloads constructor(context: Context?, attrs: Attribute
     }
 
     override fun userActions(): Observable<UserActionEvent> = userActions
+
+
+    private fun bindActions(): Observable<UserActionEvent> {
+        return button.clicks().map { UserActionEvent(ActionTypes.BASE, ActionTypes.REFRESH) }
+    }
 }

@@ -2,16 +2,15 @@ package beg.hr.kotlindesarrolladorandroid.news.ui
 
 import android.os.Parcel
 import android.os.Parcelable
-import beg.hr.kotlindesarrolladorandroid.common.ui.UserActionEvent
+import beg.hr.kotlindesarrolladorandroid.common.ui.View
 import beg.hr.kotlindesarrolladorandroid.common.ui.ViewPresenter
-import rx.Observable
 
 /**
  * Created by juraj on 23/02/2017.
  */
 
 /**
- * Screen key - used by saving screen history with flow
+ * Screen key - used by saving screen history with square flow library
  */
 class NewsKey() : Parcelable {
     companion object {
@@ -31,27 +30,26 @@ class NewsKey() : Parcelable {
 /**
  * View
  */
-interface NewsView {
-    fun render(state: State)
-
-    fun userActions(): Observable<UserActionEvent>
-}
+interface NewsView : View<State>
 
 /**
  * Presenter
  */
-abstract class NewsPresenter : ViewPresenter<NewsView>() {
-}
+abstract class NewsPresenter : ViewPresenter<NewsView>()
 
+/**
+ * User action types
+ */
 class ActionTypes {
     companion object {
         val BASE: String = "view:news"
-        val BUTTON_CLICKED: String = BASE + "button:clicked"
+        val REFRESH: String = BASE + ":refresh:clicked"
     }
 }
 
-
-// View Models
+/**
+ * View State that can be stored for orientation changes
+ */
 data class State(val loading: Boolean, val news: List<NewsItem>) : Parcelable {
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<State> = object : Parcelable.Creator<State> {
@@ -73,7 +71,7 @@ data class State(val loading: Boolean, val news: List<NewsItem>) : Parcelable {
     }
 }
 
-data class NewsItem(val title: String, val imgUrl: String) : Parcelable {
+data class NewsItem(val timestamp: Long, val title: String, val imgUrl: String) : Parcelable {
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<NewsItem> = object : Parcelable.Creator<NewsItem> {
             override fun createFromParcel(source: Parcel): NewsItem = NewsItem(source)
@@ -81,11 +79,12 @@ data class NewsItem(val title: String, val imgUrl: String) : Parcelable {
         }
     }
 
-    constructor(source: Parcel) : this(source.readString(), source.readString())
+    constructor(source: Parcel) : this(source.readLong(), source.readString(), source.readString())
 
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.writeLong(timestamp)
         dest?.writeString(title)
         dest?.writeString(imgUrl)
     }
